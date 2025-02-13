@@ -6,29 +6,32 @@ using System.Linq.Expressions;
 
 namespace PortfolioService.Infrastructure.Repositories
 {
-    public class Repository<T>(PortfolioDbContext context) : IRepository<T> where T : Base
+    public class Repository<T> : IRepository<T> where T : Base
     {
-        protected readonly PortfolioDbContext _context = context;
-        protected readonly DbSet<T> _dbSet = context.Set<T>();
+        protected readonly PortfolioDbContext _context;
+        protected readonly DbSet<T> _dbSet;
+
+        public Repository(PortfolioDbContext context)
+        {
+            _context = context;
+            _dbSet = context.Set<T>();
+        }
 
         public async Task<string> AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
-        
-            var IDProperty = typeof(T).GetProperty("ID");
-            if (IDProperty != null)
+            var idProperty = typeof(T).GetProperty("ID");
+            if (idProperty != null)
             {
-                return (string)IDProperty.GetValue(entity)!;
+                return (string)idProperty.GetValue(entity)!;
             }
-
             return string.Empty;
         }
 
-        public async Task<bool> DeleteAsync(T entity)
+        public Task<bool> DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            return Task.FromResult(true);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -36,21 +39,20 @@ namespace PortfolioService.Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T?> GetByIDAsync(string ID)
+        public async Task<T?> GetByIDAsync(string id)
         {
-            return await _dbSet.FindAsync(ID);
+            return await _dbSet.FindAsync(id);
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public Task<bool> UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
-            return await _context.SaveChangesAsync() > 0;
+            return Task.FromResult(true);
         }
 
         public async Task<IEnumerable<T>> GetByConditionAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
-
     }
 }
