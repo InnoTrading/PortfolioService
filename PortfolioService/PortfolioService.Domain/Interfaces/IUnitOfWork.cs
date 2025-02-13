@@ -4,10 +4,10 @@ namespace PortfolioService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Accounts> Accounts { get; }
-        IRepository<Users> Users { get; }
-        IRepository<Stocks> Stocks { get; }
-        IRepository<UserStocks> UserStocks { get; }
+        IRepository<AccountEntity> Accounts { get; }
+        IRepository<UserEntity> Users { get; }
+        IRepository<StockEntity> Stocks { get; }
+        IRepository<UserStockEntity> UserStocks { get; }
 
         Task<int> CommitAsync();
     }

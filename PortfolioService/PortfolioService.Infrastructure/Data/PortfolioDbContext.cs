@@ -7,10 +7,10 @@ namespace PortfolioService.Infrastructure.Data
     {
         public PortfolioDbContext(DbContextOptions<PortfolioDbContext> options) : base(options) {}
 
-        public DbSet<Accounts> Accounts { get; set; } = null!;
-        public DbSet<Users> Users { get; set; } = null!;
-        public DbSet<Stocks> Stocks { get; set; } = null!;
-        public DbSet<UserStocks> UserStocks { get; set; } = null!;
+        public DbSet<AccountEntity> Accounts { get; set; } = null!;
+        public DbSet<UserEntity> Users { get; set; } = null!;
+        public DbSet<StockEntity> Stocks { get; set; } = null!;
+        public DbSet<UserStockEntity> UserStocks { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,26 +23,70 @@ namespace PortfolioService.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserStocks>()
-                .HasOne(us => us.Users)   
-                .WithMany()                
-                .HasForeignKey(us => us.UserID)
-                .IsRequired();
+            modelBuilder.Entity<BaseEntity>()
+                .HasKey(e => e.ID);
 
-            modelBuilder.Entity<UserStocks>()
-                .HasOne(us => us.Stock)      
-                .WithMany()
-                .HasForeignKey(us => us.StockID)
-                .IsRequired();
+            modelBuilder.Entity<UserEntity>(entity =>
+            {
+                entity.Property(e => e.UserName)
+                      .IsRequired()
+                      .HasMaxLength(50);
 
-            modelBuilder.Entity<Accounts>()
-                .HasOne(a => a.User)          
-                .WithOne()
-                .HasForeignKey<Accounts>(a => a.UserID)
-                .IsRequired();
+                entity.Property(e => e.UserEmail)
+                      .IsRequired()
+                      .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<StockEntity>(entity =>
+            {
+                entity.Property(e => e.Name)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.Ticker)
+                      .IsRequired()
+                      .HasMaxLength(10);
+
+                entity.Property(e => e.Price)
+                      .IsRequired();
+
+                entity.Property(e => e.Description)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<AccountEntity>(entity =>
+            {
+                entity.Property(e => e.Balance)
+                      .IsRequired();
+
+                entity.Property(e => e.ReservedBalance)
+                      .IsRequired();
+
+                entity.HasOne(e => e.User)
+                      .WithOne()
+                      .HasForeignKey<AccountEntity>(e => e.UserID)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<UserStockEntity>(entity =>
+            {
+                entity.Property(e => e.Quantity)
+                      .IsRequired();
+
+                entity.HasOne(e => e.Users)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserID)
+                      .IsRequired();
+
+                entity.HasOne(e => e.Stock)
+                      .WithMany()
+                      .HasForeignKey(e => e.StockID)
+                      .IsRequired();
+            });
 
             base.OnModelCreating(modelBuilder);
         }
+
 
     }
 }
