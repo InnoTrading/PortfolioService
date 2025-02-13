@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace PortfolioService.Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : Base
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly PortfolioDbContext _context;
         protected readonly DbSet<T> _dbSet;
