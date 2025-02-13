@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PortfolioService.Domain.Entities
 {
-    public class Accounts: Base
+    public class AccountEntity: Base
     {
         [Required]
         public required string UserID { get; set; }

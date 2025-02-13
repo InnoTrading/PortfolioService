@@ -4,7 +4,7 @@ using PortfolioService.Domain.Entities;
 
 namespace PortfolioService.Domain.Entities
 {
-    public class UserStocks: Base
+    public class UserStocks: BaseEntity
     {
         [Required]
         public required string UserID { get; set; }

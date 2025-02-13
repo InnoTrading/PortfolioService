@@ -2,7 +2,7 @@
 
 namespace PortfolioService.Domain.Entities
 {
-    public class Base
+    public class BaseEntity
     {
         [Key]
         public required string ID { get; set; }  

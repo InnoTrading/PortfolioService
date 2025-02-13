@@ -7,10 +7,10 @@ namespace PortfolioService.Infrastructure.Data
     {
         public PortfolioDbContext(DbContextOptions<PortfolioDbContext> options) : base(options) {}
 
-        public DbSet<Accounts> Accounts { get; set; } = null!;
-        public DbSet<Users> Users { get; set; } = null!;
-        public DbSet<Stocks> Stocks { get; set; } = null!;
-        public DbSet<UserStocks> UserStocks { get; set; } = null!;
+        public DbSet<AccountEntity> Accounts { get; set; } = null!;
+        public DbSet<UserEntity> Users { get; set; } = null!;
+        public DbSet<StockEntity> Stocks { get; set; } = null!;
+        public DbSet<UserStockEntity> UserStocks { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,22 +23,22 @@ namespace PortfolioService.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserStocks>()
+            modelBuilder.Entity<UserStockEntity>()
                 .HasOne(us => us.Users)   
                 .WithMany()                
                 .HasForeignKey(us => us.UserID)
                 .IsRequired();
 
-            modelBuilder.Entity<UserStocks>()
+            modelBuilder.Entity<UserStockEntity>()
                 .HasOne(us => us.Stock)      
                 .WithMany()
                 .HasForeignKey(us => us.StockID)
                 .IsRequired();
 
-            modelBuilder.Entity<Accounts>()
+            modelBuilder.Entity<AccountEntity>()
                 .HasOne(a => a.User)          
                 .WithOne()
-                .HasForeignKey<Accounts>(a => a.UserID)
+                .HasForeignKey<AccountEntity>(a => a.UserID)
                 .IsRequired();
 
             base.OnModelCreating(modelBuilder);

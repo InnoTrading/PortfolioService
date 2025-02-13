@@ -4,7 +4,7 @@ namespace PortfolioService.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Accounts> Accounts { get; }
+        IRepository<AccountEntity> Accounts { get; }
         IRepository<Users> Users { get; }
         IRepository<Stocks> Stocks { get; }
         IRepository<UserStocks> UserStocks { get; }

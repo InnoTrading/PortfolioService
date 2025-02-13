@@ -2,7 +2,7 @@
 
 namespace PortfolioService.Domain.Entities
 {
-    public class Stocks : Base
+    public class Stocks : BaseEntity
     {
         [Required]
         [StringLength(100)]
