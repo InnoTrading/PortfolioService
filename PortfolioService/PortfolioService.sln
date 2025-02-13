@@ -5,13 +5,13 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PortfolioService", "PortfolioService", "{A0F2E39B-A4F6-4A3D-9945-6B7FDE72CDC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Domain", "PortfolioService\PortfolioService.Domain\PortfolioService.Domain.csproj", "{26BFCC70-8137-4B3D-9E07-99B9FB45B7D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Domain", "PortfolioService.Domain\PortfolioService.Domain.csproj", "{26BFCC70-8137-4B3D-9E07-99B9FB45B7D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Application", "PortfolioService\PortfolioService.Application\PortfolioService.Application.csproj", "{EB589BCE-D3EC-430E-989B-360FB765FDE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Application", "PortfolioService.Application\PortfolioService.Application.csproj", "{EB589BCE-D3EC-430E-989B-360FB765FDE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Presentation", "PortfolioService\PortfolioService.WebAPI\PortfolioService.Presentation.csproj", "{752F8671-1D85-4903-947F-564C1CA86809}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.WebAPI", "PortfolioService.WebAPI\PortfolioService.WebAPI.csproj", "{752F8671-1D85-4903-947F-564C1CA86809}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Infrastructure", "PortfolioService\PortfolioService.Infrastructure\PortfolioService.Infrastructure.csproj", "{570D0793-478C-436D-B122-1C257F47A113}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioService.Infrastructure", "PortfolioService.Infrastructure\PortfolioService.Infrastructure.csproj", "{570D0793-478C-436D-B122-1C257F47A113}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

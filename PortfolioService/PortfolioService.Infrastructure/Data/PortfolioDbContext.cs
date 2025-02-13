@@ -14,8 +14,11 @@ namespace PortfolioService.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies();
-            optionsBuilder.UseNpgsql("ConnectionString");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseLazyLoadingProxies();
+                optionsBuilder.UseNpgsql("DefaultConnection");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
