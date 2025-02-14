@@ -1,26 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using PortfolioService.Domain.Entities;
-
 namespace PortfolioService.Domain.Entities
 {
-    public class UserStocks: BaseEntity
+    public class UserStockEntity : BaseEntity
     {
-        [Required]
-        public required string UserID { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(UserID))]
-        public required virtual Users Users { get; set; }
-
-        [Required]
-        public required int Quantity { get; set; }
-
-        [Required]
-        public required string StockID { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(StockID))]
-        public required virtual Stocks Stock { get; set; }
+        public Guid UserID { get; set; }
+        public virtual UserEntity User { get; set; }
+        public int Quantity { get; set; }
+        public Guid StockID { get; set; }
+        public virtual StockEntity Stock { get; set; }
     }
 }

@@ -1,16 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PortfolioService.Domain.Entities
+﻿namespace PortfolioService.Domain.Entities
 {
-    public class Users : BaseEntity
+    public class UserEntity : BaseEntity
     {
-        [Required]
-        [StringLength(50)]
-        public required string UserName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(50)]
-        public required string UserEmail { get; set; }
+        public string UserName { get; set; }
+        public string UserEmail { get; set; }
     }
 }

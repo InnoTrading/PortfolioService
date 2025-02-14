@@ -1,22 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
 namespace PortfolioService.Domain.Entities
 {
-    public class AccountEntity: Base
+    public class AccountEntity : BaseEntity
     {
-        [Required]
-        public required string UserID { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(UserID))]
-        public required virtual Users User { get; set; }
-
-        [Required]
-        public required decimal Balance { get; set; }
-
-        [Required]
-        public required decimal ReservedBalance { get; set; }
-
+        public Guid UserID { get; set; }
+        public virtual UserEntity User { get; set; }
+        public decimal Balance { get; set; }
+        public decimal ReservedBalance { get; set; }
     }
 }
