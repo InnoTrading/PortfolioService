@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PortfolioService.Domain.Entities;
 
 namespace PortfolioService.Application.DTOs
 {
-    internal class StockAggregateDTO
-    {
-    }
+    public record StockAggregateDTO(StockEntity Stock, decimal TotalQuantity);
 }

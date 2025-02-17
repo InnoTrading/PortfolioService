@@ -8,16 +8,7 @@ namespace PortfolioService.WebAPI.Controllers
     public class PortfolioController(IAccountManager accountService) : Controller
     {
         private readonly IAccountManager _accountService = accountService;
-        public IActionResult Index()
-        {
-            return View();
-        }
-        [HttpGet("balance/userID")]
-        public ActionResult<decimal> GetBalance(Guid userID)
-        {
-            var balance = _accountService.Balance(userID);
-            
-            return Ok(balance);
-        }
+
+        
     }
 }

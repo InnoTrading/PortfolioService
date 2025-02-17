@@ -3,7 +3,7 @@ using PortfolioService.Domain.Interfaces;
 
 namespace PortfolioService.Application.Services
 {
-    public class AccountService(IUnitOfWork unitOfWork) : IAccountService
+    public class AccountManager(IUnitOfWork unitOfWork) : IAccountManager
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -15,6 +15,35 @@ namespace PortfolioService.Application.Services
                 throw new ArgumentNullException(nameof(userID), $"{nameof(account)} cannot be found.");
 
             return account;
+        }
+        public async Task<bool> CreateAccount(Guid userID)
+        {
+            var existingAccount = (await _unitOfWork.Accounts.GetByConditionAsync(a => a.UserID == userID)).SingleOrDefault();
+            if (existingAccount != null)
+            {
+                throw new InvalidOperationException("Account already exists for this user.");
+            }
+
+            var newAccount = new AccountEntity
+            {
+                UserID = userID,
+                Balance = 0,
+                ReservedBalance = 0,
+            };
+
+            await _unitOfWork.Accounts.AddAsync(newAccount);
+            var result = await _unitOfWork.CommitAsync();
+            return result >= 1;
+        }
+        public async Task<bool> DeleteAccount(Guid userID)
+        {
+            var account = await GetAccountByUserID(userID);
+            if (account == null)
+                throw new ArgumentNullException(nameof(userID), "Account not found.");
+
+            await _unitOfWork.Accounts.DeleteAsync(account);
+            var result = await _unitOfWork.CommitAsync();
+            return result >= 1;
         }
         public async Task<bool> Deposit(Guid userID, decimal amount)
         {
