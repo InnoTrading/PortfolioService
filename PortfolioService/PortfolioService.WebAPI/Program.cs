@@ -1,4 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using PortfolioService.Application.Interfaces;
+using PortfolioService.Application.Services;
+using PortfolioService.Domain.Extensions;
+using PortfolioService.Domain.Interfaces;
 using PortfolioService.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,12 +13,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddDomainServices();
 builder.Configuration.AddEnvironmentVariables();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<PortfolioDbContext>(options =>
-    options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 

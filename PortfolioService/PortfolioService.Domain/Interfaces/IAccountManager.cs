@@ -12,6 +12,8 @@ namespace PortfolioService.Domain.Interfaces
         Task<decimal> ReservedBalance(Guid userID);
         Task <UserEntity> GetUserInfo(Guid userID);
         Task <IEnumerable<UserStockEntity>> GetStocks(Guid userID);
+        Task<bool> RemoveStock(Guid userID, Guid stockID, int quantityToSell);
+        Task<bool> AddStocks(Guid userID, Guid stockID, int quantity);
 
     }
 }
