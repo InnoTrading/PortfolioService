@@ -1,15 +1,10 @@
 ﻿using PortfolioService.Application.DTOs;
 using PortfolioService.Application.Interfaces;
-using PortfolioService.Domain.Entities;
 using PortfolioService.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PortfolioService.Application.Services
 {
-    public class AccountApplicationService(IAccountManager accountManager) : IAccountService
+    public class AccountService(IAccountManager accountManager) : IAccountService
     {
         private readonly IAccountManager _accountManager = accountManager;
 
@@ -64,6 +59,17 @@ namespace PortfolioService.Application.Services
             );
 
             return stockSummaries;
+        }
+        public async Task<IsSuccessResultDto> AddStocks(Guid userID, Guid stockID, int quantity)
+        {
+            var result = await _accountManager.AddStocks(userID, stockID, quantity);
+            return new IsSuccessResultDto(result);
+        }
+
+        public async Task<IsSuccessResultDto> RemoveStocks(Guid userID, Guid stockID, int quantityToSell)
+        {
+            var result = await _accountManager.RemoveStock(userID, stockID, quantityToSell);
+            return new IsSuccessResultDto(result);
         }
     }
 }

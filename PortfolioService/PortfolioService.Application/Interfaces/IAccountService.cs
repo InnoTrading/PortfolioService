@@ -12,6 +12,8 @@ namespace PortfolioService.Application.Interfaces
         Task<ReservedBalanceDto> GetReservedBalance(Guid userID);
         Task<UserInfoDto> GetUserInfo(Guid userID);
         Task<IEnumerable<StockAggregateDTO>> GetStocks(Guid userID);
+        Task<IsSuccessResultDto> AddStocks(Guid userID, Guid stockID, int quantity);
+        Task<IsSuccessResultDto> RemoveStocks(Guid userID, Guid stockID, int quantityToSell);
     }
 
 }
