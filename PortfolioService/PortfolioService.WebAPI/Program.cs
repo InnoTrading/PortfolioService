@@ -18,6 +18,8 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
