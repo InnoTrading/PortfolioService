@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PortfolioService.Domain.Entities
+﻿namespace PortfolioService.Domain.Entities
 {
     public class UserEntity : BaseEntity
     {
@@ -8,4 +6,3 @@ namespace PortfolioService.Domain.Entities
         public string UserEmail { get; set; }
     }
 }
-

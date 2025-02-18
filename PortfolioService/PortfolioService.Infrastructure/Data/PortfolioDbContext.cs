@@ -73,7 +73,7 @@ namespace PortfolioService.Infrastructure.Data
                 entity.Property(e => e.Quantity)
                       .IsRequired();
 
-                entity.HasOne(e => e.Users)
+                entity.HasOne(e => e.User)
                       .WithMany()
                       .HasForeignKey(e => e.UserID)
                       .IsRequired();
