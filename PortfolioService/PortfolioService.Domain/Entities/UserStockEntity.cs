@@ -1,4 +1,4 @@
-namespace PortfolioService.Domain.Entities
+namespace PortfolioService.Domain.Entiti
 {
     public class UserStockEntity : BaseEntity
     {

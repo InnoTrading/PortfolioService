@@ -1,5 +1,5 @@
 namespace PortfolioService.Domain.Entities
-{
+
     public class AccountEntity : BaseEntity
     {
         public Guid UserID { get; set; }
