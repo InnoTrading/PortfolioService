@@ -4,16 +4,11 @@ namespace PortfolioService.Application.Interfaces
 {
     public interface IAccountService
     {
-        Task<IsSuccessResultDto> CreateAccount(Guid userID);
-        Task<IsSuccessResultDto> DeleteAccount(Guid userID);
-        Task<IsSuccessResultDto> Deposit(Guid userID, decimal amount);
-        Task<IsSuccessResultDto> Withdraw(Guid userID, decimal amount);
-        Task<BalanceDto> GetBalance(Guid userID);
-        Task<ReservedBalanceDto> GetReservedBalance(Guid userID);
-        Task<UserInfoDto> GetUserInfo(Guid userID);
-        Task<IEnumerable<StockAggregateDTO>> GetStocks(Guid userID);
-        Task<IsSuccessResultDto> AddStocks(Guid userID, Guid stockID, int quantity);
-        Task<IsSuccessResultDto> RemoveStocks(Guid userID, Guid stockID, int quantityToSell);
+        Task<IsSuccessResultDto> CreateAccount(RegisterDto userId);
+        Task<IsSuccessResultDto> DeleteAccount(string userId);
+        Task<IsSuccessResultDto> Deposit(string userId, decimal amount);
+        Task<IsSuccessResultDto> Withdrawal(string userId, decimal amount);
+        Task<BalanceDto> GetBalance(string userId);
+        Task<ReservedBalanceDto> GetReservedBalance(string userId);
     }
-
 }

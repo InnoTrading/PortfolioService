@@ -1,9 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using PortfolioService.Application.Interfaces;
-using PortfolioService.Application.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PortfolioService.Application.Extensions;
 using PortfolioService.Domain.Extensions;
-using PortfolioService.Domain.Interfaces;
-using PortfolioService.Infrastructure.Data;
+using PortfolioService.Infrastructure.Extensions;
+using PortfolioService.Infrastructure.Messaging;
+using PortfolioService.WebAPI.Extensions;
+using PortfolioService.WebAPI.Middlewares;
+using ApplicationExtensions = PortfolioService.Application.Extentions.ApplicationExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,17 +14,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddApplicationServices();
+PresentationExtensions.AddPresentationServices(builder.Services);
+ApplicationExtensions.AddApplicationServices(builder.Services);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddDomainServices();
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.Authority = "https://dev-y03fg5cbt3pqn8o8.us.auth0.com/";
+    options.Audience = "https://inno-trading-auth";
+});
+
+
 var app = builder.Build();
+
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline.ocelo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -30,7 +44,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+  
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

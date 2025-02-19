@@ -2,5 +2,5 @@
 
 namespace PortfolioService.Application.DTOs
 {
-    public record StockAggregateDTO(StockEntity Stock, decimal TotalQuantity);
+    public record StockAggregateDto(StockEntity Stock, decimal TotalQuantity);
 }
