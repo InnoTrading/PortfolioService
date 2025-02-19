@@ -9,14 +9,14 @@ namespace PortfolioService.Application.Services
         private readonly IAccountManager _accountManager = accountManager;
 
 
-        public async Task<IsSuccessResultDto> CreateAccount(Guid userID)
+        public async Task<IsSuccessResultDto> CreateAccount(Guid userId)
         {
-            var result = await _accountManager.CreateAccount(userID);
+            var result = await _accountManager.CreateAccount(userId);
             return new IsSuccessResultDto(result);
         }
-        public async Task<IsSuccessResultDto> DeleteAccount(Guid userID)
+        public async Task<IsSuccessResultDto> DeleteAccount(Guid userId)
         {
-            var result = await _accountManager.DeleteAccount(userID);
+            var result = await _accountManager.DeleteAccount(userId);
             return new IsSuccessResultDto(result);
         }
         public async Task<IsSuccessResultDto> Deposit(Guid userId, decimal amount)
@@ -25,9 +25,9 @@ namespace PortfolioService.Application.Services
             return new IsSuccessResultDto(success);
         }
 
-        public async Task<IsSuccessResultDto> Withdraw(Guid userId, decimal amount)
+        public async Task<IsSuccessResultDto> Withdrawal(Guid userId, decimal amount)
         {
-            var success = await _accountManager.Withdraw(userId, amount);
+            var success = await _accountManager.Withdrawal(userId, amount);
             return new IsSuccessResultDto(success);
         }
 
@@ -48,28 +48,6 @@ namespace PortfolioService.Application.Services
             var userEntity = await _accountManager.GetUserInfo(userId);
 
             return new UserInfoDto(userEntity.ID, userEntity.UserName, userEntity.UserEmail);
-        }
-
-        public async Task<IEnumerable<StockAggregateDTO>> GetStocks(Guid userId)
-        {
-            var userStocks = await _accountManager.GetStocks(userId);
-
-            var stockSummaries = userStocks.Select(s => 
-                new StockAggregateDTO(s.Stock, s.Quantity)
-            );
-
-            return stockSummaries;
-        }
-        public async Task<IsSuccessResultDto> AddStocks(Guid userID, Guid stockID, int quantity)
-        {
-            var result = await _accountManager.AddStocks(userID, stockID, quantity);
-            return new IsSuccessResultDto(result);
-        }
-
-        public async Task<IsSuccessResultDto> RemoveStocks(Guid userID, Guid stockID, int quantityToSell)
-        {
-            var result = await _accountManager.RemoveStock(userID, stockID, quantityToSell);
-            return new IsSuccessResultDto(result);
         }
     }
 }

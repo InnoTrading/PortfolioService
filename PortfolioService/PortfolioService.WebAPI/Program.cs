@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PortfolioService.Application.Extensions;
 using PortfolioService.Domain.Extensions;
+using PortfolioService.Infrastructure.Extensions;
+using PortfolioService.WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 

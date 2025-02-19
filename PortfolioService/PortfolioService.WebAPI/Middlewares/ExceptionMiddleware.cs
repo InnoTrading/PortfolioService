@@ -1,43 +1,37 @@
 ﻿using System.Net;
 using System.Text.Json;
 
-public class ExceptionMiddleware
+namespace PortfolioService.WebAPI.Middlewares
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionMiddleware> _logger;
-
-    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
-        _next = next;
-        _logger = logger;
-    }
-
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
+        public async Task InvokeAsync(HttpContext context)
         {
-            await _next(context);
+            try
+            {
+                await next(context);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unhandled exception occured.");
+                await HandleExceptionAsync(context, ex);
+            }
         }
-        catch (Exception ex)
+
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            _logger.LogError(ex, "Unhandled exeption occured.");
-            await HandleExceptionAsync(context, ex);
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            // Delete on production environment 
+            var errorResponse = new
+            {
+                Message = "An error occured",
+                Detailed = exception.Message
+            };
+
+            var result = JsonSerializer.Serialize(errorResponse);
+            return context.Response.WriteAsync(result);
         }
-    }
-
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-        // Delete on production enviroment 
-        var errorResponse = new
-        {
-            Message = "An error occured",
-            Detailed = exception.Message
-        };
-
-        var result = JsonSerializer.Serialize(errorResponse);
-        return context.Response.WriteAsync(result);
     }
 }
