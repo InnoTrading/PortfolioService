@@ -4,7 +4,6 @@ namespace PortfolioService.Domain.Entities
 {
     public class BaseEntity
     {
-        public Guid ID { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
     }
 }
-

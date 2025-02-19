@@ -3,17 +3,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PortfolioService.Domain.Interfaces;
 using PortfolioService.Infrastructure.Data;
+using PortfolioService.Infrastructure.Repositories;
 
-public static class InfrastructureExtensions
+namespace PortfolioService.Infrastructure.Extensions
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static class InfrastructureExtensions
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        services.AddDbContext<PortfolioDbContext>(options =>
-            options.UseNpgsql(connectionString));
-       
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<PortfolioDbContext>(options =>
+                options.UseNpgsql(connectionString));
 
-        return services;
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            return services;
+        }
     }
 }

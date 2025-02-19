@@ -2,5 +2,5 @@
 
 namespace PortfolioService.Application.DTOs
 {
-    public record StockDTO(StockEntity Stock, int Quantity);
+    public record StockDto(StockEntity Stock, int Quantity);
 }

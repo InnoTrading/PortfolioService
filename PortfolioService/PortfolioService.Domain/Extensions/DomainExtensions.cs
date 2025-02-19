@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PortfolioService.Application.Services;
 using PortfolioService.Domain.Interfaces;
+using PortfolioService.Domain.Managers;
 
 namespace PortfolioService.Domain.Extensions
 {
@@ -9,6 +9,7 @@ namespace PortfolioService.Domain.Extensions
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
             services.AddScoped<IAccountManager, AccountManager>();
+            services.AddScoped<IPortfolioManager, PortfolioManager>();
             return services;
         }
     }
