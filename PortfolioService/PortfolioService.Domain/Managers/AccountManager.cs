@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using PortfolioService.Domain.Entities;
 using PortfolioService.Domain.Interfaces;
 
@@ -22,6 +22,7 @@ namespace PortfolioService.Domain.Managers
         {
             var existingAccount =
                 (await _unitOfWork.Accounts.GetByConditionAsync(a => a.UserID == userId)).SingleOrDefault();
+                
             if (existingAccount != null)
             {
                 throw new InvalidOperationException("Account already exists for this user.");

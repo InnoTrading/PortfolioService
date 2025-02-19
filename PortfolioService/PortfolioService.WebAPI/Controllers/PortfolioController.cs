@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Application.Interfaces;
@@ -20,7 +20,6 @@ namespace PortfolioService.WebAPI.Controllers
                 throw new UnauthorizedAccessException("Lack of Id in JWT token.");
             return Guid.Parse(userIdString);
         }
-
         [HttpGet("stocks")]
         public async Task<IActionResult> GetStocks()
         {
