@@ -11,5 +11,4 @@ namespace PortfolioService.Domain.Interfaces
 
         Task<int> CommitAsync();
     }
-
 }

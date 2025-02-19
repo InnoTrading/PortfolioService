@@ -25,6 +25,7 @@ namespace PortfolioService.Infrastructure.Repositories
             {
                 return (string)idProperty.GetValue(entity)!;
             }
+
             return string.Empty;
         }
 
