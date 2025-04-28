@@ -21,7 +21,7 @@ namespace PortfolioService.WebAPI.Controllers
                 throw new UnauthorizedAccessException("Lack of Id in JWT token.");
             return userId;
         }
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] RegisterDto registerDto)
         {
@@ -40,8 +40,9 @@ namespace PortfolioService.WebAPI.Controllers
         [HttpPost("deposits")]
         public async Task<IActionResult> Deposit([FromQuery] decimal amount)
         {
-            var userId = GetUserIdFromToken();
-            var result = await _accountService.Deposit(userId, amount);
+            //var userId = GetUserIdFromToken();
+            //TODO
+            var result = await _accountService.Deposit("string", amount);
             return Ok(result);
         }
 

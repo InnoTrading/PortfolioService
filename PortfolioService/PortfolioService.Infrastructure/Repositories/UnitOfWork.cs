@@ -7,11 +7,9 @@ namespace PortfolioService.Infrastructure.Repositories;
 public class UnitOfWork(PortfolioDbContext context) : IUnitOfWork
 {
     private IRepository<AccountEntity>? _accounts;
-    private IRepository<StockEntity>? _stocks;
     private IRepository<UserStockEntity>? _userStocks;
 
     public IRepository<AccountEntity> Accounts => _accounts ??= new Repository<AccountEntity>(context);
-    public IRepository<StockEntity> Stocks => _stocks ??= new Repository<StockEntity>(context);
     public IRepository<UserStockEntity> UserStocks => _userStocks ??= new Repository<UserStockEntity>(context);
 
     public async Task<int> CommitAsync()

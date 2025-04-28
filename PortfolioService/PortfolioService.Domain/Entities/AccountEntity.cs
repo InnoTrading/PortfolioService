@@ -1,4 +1,5 @@
 using PortfolioService.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class AccountEntity : BaseEntity
 {

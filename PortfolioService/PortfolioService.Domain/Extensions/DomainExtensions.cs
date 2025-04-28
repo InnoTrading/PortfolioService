@@ -10,6 +10,7 @@ namespace PortfolioService.Domain.Extensions
         {
             services.AddScoped<IAccountManager, AccountManager>();
             services.AddScoped<IPortfolioManager, PortfolioManager>();
+
             return services;
         }
     }

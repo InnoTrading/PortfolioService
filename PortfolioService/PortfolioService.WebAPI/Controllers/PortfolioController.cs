@@ -32,7 +32,7 @@ namespace PortfolioService.WebAPI.Controllers
         public async Task<IActionResult> BuyStocks([FromBody] StockOperationRequest request)
         {
             var userId = GetUserIdFromToken();
-            var result = await _portfolioService.AddStocks(userId, request.StockId, request.Quantity);
+            var result = await _portfolioService.AddStocks(userId, request.stockTicker, request.Quantity);
             return Ok(result);
         }
 
@@ -40,10 +40,10 @@ namespace PortfolioService.WebAPI.Controllers
         public async Task<IActionResult> SellStocks([FromBody] StockOperationRequest request)
         {
             var userId = GetUserIdFromToken();
-            var result = await _portfolioService.RemoveStocks(userId, request.StockId, request.Quantity);
+            var result = await _portfolioService.RemoveStocks(userId, request.stockTicker, request.Quantity);
             return Ok(result);
         }
 
-        public record StockOperationRequest(Guid StockId, int Quantity);
+        public record StockOperationRequest(string stockTicker, int Quantity);
     }
 }

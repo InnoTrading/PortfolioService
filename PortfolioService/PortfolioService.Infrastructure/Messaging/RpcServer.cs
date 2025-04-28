@@ -1,82 +1,86 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text;
 
 namespace PortfolioService.Infrastructure.Messaging
 {
-    public class RpcServer
+    public sealed class RpcServer : BackgroundService
     {
-        private const string QueueName = "user_free_balance_rpc_queue";
-        private readonly IConnectionFactory _factory = new ConnectionFactory { HostName = "localhost" };
+        private readonly ConnectionFactory _factory = new() { HostName = "localhost" };
+        private readonly ILogger<RpcServer> _logger;
+        private readonly IEnumerable<IRpcQueueHandler> _handlers;
 
-        public async Task StartAsync(CancellationToken cancellationToken = default)
+        public RpcServer(IEnumerable<IRpcQueueHandler> handlers, ILogger<RpcServer> logger)
         {
-            var connection = await _factory.CreateConnectionAsync(cancellationToken);
-            var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+            _handlers = handlers;
+            _logger = logger;
+        }
 
-            await channel.QueueDeclareAsync(
-                queue: QueueName,
-                durable: false,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null,
-                cancellationToken: cancellationToken);
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            _logger.LogInformation("RPC Server starting…");
+            await using var conn = await _factory.CreateConnectionAsync(stoppingToken);
+            await using var channel = await conn.CreateChannelAsync(cancellationToken: stoppingToken);
 
-            await channel.BasicQosAsync(prefetchSize: 0, prefetchCount: 1, global: false, cancellationToken: cancellationToken);
+            await channel.BasicQosAsync(0, 1, false, stoppingToken);
 
-            var consumer = new AsyncEventingBasicConsumer(channel);
-            consumer.ReceivedAsync += async (model, ea) =>
+            foreach (var h in _handlers)
             {
-                var props = ea.BasicProperties; 
-                var replyProps = new BasicProperties
-                {
-                    CorrelationId = props?.CorrelationId
-                };
+                await channel.QueueDeclareAsync(
+                    queue: h.QueueName,
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null,
+                    passive: false,
+                    noWait: false,
+                    cancellationToken: stoppingToken);
 
+                var consumer = new AsyncEventingBasicConsumer(channel);
+                consumer.ReceivedAsync += async (_, ea) =>
+                {
+                    var reqProps = ea.BasicProperties;
 
-                decimal response = decimal.MinValue;
-                try
-                {
-                    var requestMessage = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    Console.WriteLine($" [.] Get request: {requestMessage}");
+                    // RabbitMQ.Client 7.x: CreateBasicProperties() 
+                    var replyProps = new BasicProperties
+                    {
+                        CorrelationId = reqProps.CorrelationId
+                    };
 
-                    response = ProcessPortfolioRequest(requestMessage);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(" [!] Failed during execution: " + ex.Message);
-                }
-                finally
-                {
-                    var responseBytes = Encoding.UTF8.GetBytes(Convert.ToString(response, CultureInfo.InvariantCulture));
+                    byte[] resp;
+                    try
+                    {
+                        resp = await h.HandleAsync(ea.Body, reqProps, channel, stoppingToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Handler {Q} failed", h.QueueName);
+                        resp = Encoding.UTF8.GetBytes("error");
+                    }
+
                     await channel.BasicPublishAsync(
                         exchange: "",
-                        routingKey: props.ReplyTo, 
+                        routingKey: reqProps.ReplyTo,
                         mandatory: false,
                         basicProperties: replyProps,
-                        body: responseBytes,
-                        cancellationToken: cancellationToken);
+                        body: resp,
+                        cancellationToken: stoppingToken);
+                    _logger.LogInformation("Started RPC consumer on queue {QueueName}", h.QueueName);
 
-                    await channel.BasicAckAsync(ea.DeliveryTag, multiple: false, cancellationToken: cancellationToken);
-                }
-            };
+                    await channel.BasicAckAsync(ea.DeliveryTag, false, stoppingToken);
+                };
 
-            await channel.BasicConsumeAsync(
-                queue: QueueName,
-                autoAck: false,
-                consumer: consumer,
-                cancellationToken: cancellationToken);
+                await channel.BasicConsumeAsync(
+                    queue: h.QueueName,
+                    autoAck: false,
+                    consumer: consumer,
+                    cancellationToken: stoppingToken);
+            }
 
-            await Task.Delay(Timeout.Infinite, cancellationToken);
-        }
-        private decimal ProcessPortfolioRequest(string userId)
-        {
-            return 0;
+            _logger.LogInformation("RPC Server ready");
+            await Task.Delay(Timeout.Infinite, stoppingToken);
         }
     }
 }

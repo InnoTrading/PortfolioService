@@ -13,21 +13,21 @@ namespace PortfolioService.Application.Services
             var userStocks = await _portfolioManager.GetStocks(userId);
 
             var stockSummaries = userStocks.Select(s =>
-                new StockAggregateDto(s.Stock, s.Quantity)
+                new StockAggregateDto(s.StockTicker, s.Quantity)
             );
 
             return stockSummaries;
         }
 
-        public async Task<IsSuccessResultDto> AddStocks(string userId, Guid stockId, int quantity)
+        public async Task<IsSuccessResultDto> AddStocks(string userId, string stockTicker, int quantity)
         {
-            var result = await _portfolioManager.AddStocks(userId, stockId, quantity);
+            var result = await _portfolioManager.AddStocks(userId, stockTicker, quantity);
             return new IsSuccessResultDto(result);
         }
 
-        public async Task<IsSuccessResultDto> RemoveStocks(string userId, Guid stockId, int quantityToSell)
+        public async Task<IsSuccessResultDto> RemoveStocks(string userId, string stockTicker, int quantityToSell)
         {
-            var result = await _portfolioManager.RemoveStocks(userId, stockId, quantityToSell);
+            var result = await _portfolioManager.RemoveStocks(userId, stockTicker, quantityToSell);
             return new IsSuccessResultDto(result);
         }
     }

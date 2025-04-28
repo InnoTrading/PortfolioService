@@ -20,64 +20,72 @@ namespace PortfolioService.Domain.Managers
             return await GetStocksByCondition(s => s.Auth0UserID == Auth0UserId);
         }
 
-        public async Task<bool> AddStocks(string Auth0UserId, Guid stockId, int quantity)
+        public async Task<bool> AddStocks(string auth0UserId, string stockTicker, int quantity)
         {
-            var existingStocks =
-                await _unitOfWork.UserStocks.GetByConditionAsync(s => s.Auth0UserID == Auth0UserId && s.StockID == stockId);
-            var existingStock = existingStocks.FirstOrDefault();
+            var userStocks = (await _unitOfWork.UserStocks
+                .GetByConditionAsync(us =>
+                    us.Auth0UserID == auth0UserId &&
+                    us.StockTicker == stockTicker))
+                .ToList();
 
-            if (existingStock != null)
+            var existing = userStocks.SingleOrDefault();
+            if (existing != null)
             {
-                existingStock.Quantity += quantity;
-                await _unitOfWork.UserStocks.UpdateAsync(existingStock);
+                existing.Quantity += quantity;
+                await _unitOfWork.UserStocks.UpdateAsync(existing);
             }
             else
             {
                 var newStock = new UserStockEntity
                 {
-                    Auth0UserID = Auth0UserId,
-                    StockID = stockId,
+                    Auth0UserID = auth0UserId,
+                    StockTicker = stockTicker,
                     Quantity = quantity
                 };
                 await _unitOfWork.UserStocks.AddAsync(newStock);
             }
 
-            var result = await _unitOfWork.CommitAsync();
-            return result >= 1;
+            var saved = await _unitOfWork.CommitAsync();
+            return saved >= 1;
         }
 
-        public async Task<bool> RemoveStocks(string Auth0UserId, Guid stockId, int quantityToSell)
+        public async Task<bool> RemoveStocks(string auth0UserId, string stockTicker, int quantityToSell)
         {
-            var userStocks = await GetStocksByCondition(s => s.Auth0UserID == Auth0UserId && s.StockID == stockId);
+            var holdings = (await _unitOfWork.UserStocks
+                .GetByConditionAsync(us =>
+                    us.Auth0UserID == auth0UserId &&
+                    us.StockTicker == stockTicker))
+                .OrderBy(us => us.Id)
+                .ToList();
 
-            var userStockEntities = userStocks as UserStockEntity[] ?? userStocks.ToArray();
-            if (userStocks == null || !userStockEntities.Any())
-                throw new ArgumentNullException(nameof(stockId), "Stock not found in portfolio.");
+            if (!holdings.Any())
+                throw new InvalidOperationException($"User has no holdings of '{stockTicker}'.");
 
-            var totalQuantity = userStockEntities.Sum(s => s.Quantity);
+            var totalQuantity = holdings.Sum(h => h.Quantity);
             if (totalQuantity < quantityToSell)
-                throw new InvalidOperationException("Not enough stocks for sale in portfolio.");
+                throw new InvalidOperationException(
+                    $"Not enough shares to sell: have {totalQuantity}, need {quantityToSell}.");
 
-            foreach (var stock in userStockEntities.OrderBy(s => s.Id))
+            foreach (var h in holdings)
             {
-                if (quantityToSell <= 0)
-                    break;
+                if (quantityToSell <= 0) break;
 
-                if (stock.Quantity <= quantityToSell)
+                if (h.Quantity <= quantityToSell)
                 {
-                    quantityToSell -= stock.Quantity;
-                    await _unitOfWork.UserStocks.DeleteAsync(stock);
+                    quantityToSell -= h.Quantity;
+                    await _unitOfWork.UserStocks.DeleteAsync(h);
                 }
                 else
                 {
-                    stock.Quantity -= quantityToSell;
+                    h.Quantity -= quantityToSell;
                     quantityToSell = 0;
-                    await _unitOfWork.UserStocks.UpdateAsync(stock);
+                    await _unitOfWork.UserStocks.UpdateAsync(h);
                 }
             }
 
-            var result = await _unitOfWork.CommitAsync();
-            return result >= 1;
+            var saved = await _unitOfWork.CommitAsync();
+            return saved >= 1;
         }
+
     }
 }

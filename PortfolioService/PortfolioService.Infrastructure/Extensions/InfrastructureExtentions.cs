@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PortfolioService.Domain.Interfaces;
 using PortfolioService.Infrastructure.Data;
 using PortfolioService.Infrastructure.Messaging;
+using PortfolioService.Infrastructure.Messaging.Dtos;
+using PortfolioService.Infrastructure.Messaging.Handlers;
 using PortfolioService.Infrastructure.Repositories;
 
 namespace PortfolioService.Infrastructure.Extensions;
@@ -18,8 +20,15 @@ public static class InfrastructureExtensions
             options.UseNpgsql(connectionString));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddSingleton<RpcServer>(); 
-        services.AddHostedService<RabbitMqBackgroundService>();
+        services
+          .AddSingleton<IRpcQueueHandler, GetAvailableBalanceRpcHandler>()
+          .AddSingleton<IRpcQueueHandler, StockCountRpcHandler>()
+          .AddSingleton<IRpcQueueHandler, ReleaseReservedBalanceRpcHandler>()
+          .AddSingleton<IRpcQueueHandler, ReserveBalanceRpcHandler>()
+          .AddSingleton<IEventQueueHandler, OrderExecutedEventHandler>()
+          .AddHostedService<RpcServer>()
+          .AddHostedService<RabbitMqEventConsumer>();
+
 
 
         return services;

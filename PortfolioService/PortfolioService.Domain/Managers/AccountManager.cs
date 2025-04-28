@@ -95,6 +95,24 @@ namespace PortfolioService.Domain.Managers
             var account = await GetAccountByUserId(userId);
             return account.ReservedBalance;
         }
+        public async Task<bool> ReserveBalance(string userId, decimal amount)
+        {
+            var account = await GetAccountByUserId(userId);
+            account.ReservedBalance += amount;
+
+            var result = await _unitOfWork.CommitAsync();
+
+            return result > 0;
+        }
+        public async Task<bool> ReleaseReservedBalance(string userId, decimal amount)
+        {
+            var account = await GetAccountByUserId(userId);
+            account.ReservedBalance -= amount;
+
+            var result = await _unitOfWork.CommitAsync();
+
+            return result > 0;
+        }
 
     }
 }
