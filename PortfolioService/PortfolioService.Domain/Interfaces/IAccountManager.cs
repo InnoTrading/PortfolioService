@@ -1,6 +1,4 @@
-﻿using PortfolioService.Domain.Entities;
-
-namespace PortfolioService.Domain.Interfaces
+﻿namespace PortfolioService.Domain.Interfaces
 {
     public interface IAccountManager
     {

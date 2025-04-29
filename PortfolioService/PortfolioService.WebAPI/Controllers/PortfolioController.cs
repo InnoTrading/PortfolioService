@@ -1,7 +1,7 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioService.Application.Interfaces;
+using System.Security.Claims;
 
 namespace PortfolioService.WebAPI.Controllers
 {

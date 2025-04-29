@@ -1,12 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PortfolioService.Domain.Interfaces;
 using PortfolioService.Infrastructure.Messaging.Dtos;
 using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
 
 namespace PortfolioService.Infrastructure.Messaging.Handlers
 {

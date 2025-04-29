@@ -1,6 +1,3 @@
-using System;
-using System.Linq.Expressions;
-using PortfolioService.Domain.Entities;
 using PortfolioService.Domain.Interfaces;
 
 namespace PortfolioService.Domain.Managers

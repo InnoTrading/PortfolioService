@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using PortfolioService.Application.Extensions;
 using PortfolioService.Domain.Extensions;
 using PortfolioService.Infrastructure.Extensions;
-using PortfolioService.Infrastructure.Messaging;
 using PortfolioService.WebAPI.Extensions;
 using PortfolioService.WebAPI.Middlewares;
 using ApplicationExtensions = PortfolioService.Application.Extentions.ApplicationExtensions;
@@ -43,7 +40,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-  
+
 app.UseAuthentication();
 app.UseAuthorization();
 

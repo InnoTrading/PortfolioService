@@ -1,11 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PortfolioService.Domain.Interfaces;
-using RabbitMQ.Client;                         
+using RabbitMQ.Client;
+using System.Text;
 
 namespace PortfolioService.Infrastructure.Messaging.Handlers
 {

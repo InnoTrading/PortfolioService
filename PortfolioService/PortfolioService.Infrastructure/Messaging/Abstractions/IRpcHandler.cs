@@ -1,4 +1,4 @@
-﻿using RabbitMQ.Client; 
+﻿using RabbitMQ.Client;
 
 public interface IRpcQueueHandler
 {

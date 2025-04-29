@@ -1,9 +1,8 @@
-﻿using System.Text;
-using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PortfolioService.Domain.Interfaces;
 using RabbitMQ.Client;
-using System.Text.Json.Serialization;
+using System.Text;
+using System.Text.Json;
 using System.Transactions;
 
 namespace PortfolioService.Infrastructure.Messaging.Handlers
@@ -15,7 +14,7 @@ namespace PortfolioService.Infrastructure.Messaging.Handlers
         Guid OrderId,
         string UserId,
         string Ticker,
-        OperationType Operation,      
+        OperationType Operation,
         decimal ExecutedPrice,
         int Amount,
         DateTime ExecutedAt,

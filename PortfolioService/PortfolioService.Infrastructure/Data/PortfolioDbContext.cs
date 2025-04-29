@@ -46,7 +46,7 @@ public class PortfolioDbContext(DbContextOptions<PortfolioDbContext> options) : 
 
             entity.Property(e => e.StockTicker)
                 .IsRequired();
-                
+
         });
 
         base.OnModelCreating(modelBuilder);

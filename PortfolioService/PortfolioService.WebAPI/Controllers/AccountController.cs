@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PortfolioService.Application.DTOs;
 using PortfolioService.Application.Interfaces;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using PortfolioService.Application.DTOs;
 
 namespace PortfolioService.WebAPI.Controllers
 {
@@ -11,11 +11,11 @@ namespace PortfolioService.WebAPI.Controllers
     [Route("api/[controller]")]
     public class AccountController(IAccountService accountService) : ControllerBase
     {
-        private readonly IAccountService _accountService  = accountService;
+        private readonly IAccountService _accountService = accountService;
 
         private string GetUserIdFromToken()
         {
-            var userId= User.FindFirst("sub")?.Value
+            var userId = User.FindFirst("sub")?.Value
                                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 throw new UnauthorizedAccessException("Lack of Id in JWT token.");
