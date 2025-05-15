@@ -1,5 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using PortfolioService.Infrastructure.Data;
+using PortfolioService.Domain.Extensions;
+using PortfolioService.Infrastructure.Extensions;
+using PortfolioService.WebAPI.Extensions;
+using PortfolioService.WebAPI.Middlewares;
+using ApplicationExtensions = PortfolioService.Application.Extentions.ApplicationExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,17 +11,28 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+PresentationExtensions.AddPresentationServices(builder.Services, builder.Configuration);
+ApplicationExtensions.AddApplicationServices(builder.Services);
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddDomainServices();
 builder.Configuration.AddEnvironmentVariables();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<PortfolioDbContext>(options =>
-    options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
+app.UseMiddleware<ExceptionMiddleware>();
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("Przychodz¹ce ¿¹danie:");
+    foreach (var header in context.Request.Headers)
+    {
+        Console.WriteLine($"{header.Key}: {header.Value}");
+    }
+    await next();
+});
+
+// Configure the HTTP request pipeline.ocelo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,6 +41,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

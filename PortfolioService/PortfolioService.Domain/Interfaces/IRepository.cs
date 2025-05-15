@@ -1,5 +1,4 @@
-﻿using PortfolioService.Domain.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace PortfolioService.Domain.Interfaces
 {

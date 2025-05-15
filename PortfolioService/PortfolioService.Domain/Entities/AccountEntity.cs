@@ -1,11 +1,8 @@
-﻿namespace PortfolioService.Domain.Entities
-{
-    public class AccountEntity : BaseEntity
-    {
-        public Guid UserID { get; set; }
-        public virtual UserEntity User { get; set; }
-        public decimal Balance { get; set; }
-        public decimal ReservedBalance { get; set; }
-    }
-}
+using PortfolioService.Domain.Entities;
 
+public class AccountEntity : BaseEntity
+{
+    public string Auth0UserId { get; set; } = string.Empty;
+    public decimal Balance { get; set; } = 0;
+    public decimal ReservedBalance { get; set; } = 0;
+}
